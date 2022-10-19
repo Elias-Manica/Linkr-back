@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import authRouter from "./routes/auth.routers.js";
 
 const app = express();
 
@@ -12,6 +13,8 @@ dotenv.config();
 app.get("/status", (req, res) => {
   res.sendStatus(201);
 });
+
+app.use(authRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listen on port ${process.env.PORT}`);
