@@ -20,33 +20,33 @@ const STATUS_TEXT = Object.freeze({
     SERVER_ERROR: "Internal Server Error"
   });
 
-function validationSchema(schema, body) {
+function validationSchema(res, schema, body) {
     const validation = schema.validate(body, { abortEarly: false });
 
     if(validation.error) {
         const errorList = validation.error.details.map(error => error.message);
-        return res.status(UNPROCESSABLE_ENTITY).send(errorList);
+        return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(errorList);
     }
 }
 
 function okResponse(res, text = STATUS_TEXT.OK) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.OK).send({ message: text });
 }
 
 function createdResponse(res, text = STATUS_TEXT.CREATED) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.CREATED).send({ message: text });
 }
 
 function movedPermanentlyResponse(res, text = STATUS_TEXT.MOVED_PERMANENTLY) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.MOVED_PERMANENTLY).send({ message: text });
 }
 
 function unauthorizedResponse(res, text = STATUS_TEXT.UNAUTHORIZED) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.UNAUTHORIZED).send({ message: text });
 }
 
 function notFoundResponse(res, text = STATUS_TEXT.NOT_FOUND) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.NOT_FOUND).send({ message: text });
 }
 
 function conflictResponse(res, text = STATUS_TEXT.CONFLICT) {
@@ -54,7 +54,7 @@ function conflictResponse(res, text = STATUS_TEXT.CONFLICT) {
 }
 
 function unprocessableEntityResponse(res, text = STATUS_TEXT.UNPROCESSABLE_ENTITY) {
-    return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send({ message: text });
 }
 
 function serverErrorResponse(res, error, text = STATUS_TEXT.SERVER_ERROR) {
