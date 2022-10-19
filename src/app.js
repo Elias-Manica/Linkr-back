@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import usersRouter from "./routers/users.router.js";
 
 const app = express();
 
@@ -13,19 +14,7 @@ app.get("/status", (req, res) => {
 	res.sendStatus(201);
 });
 
-app.get("/users/:id", (req, res) => {
-	try {
-		const { id } = req.params;
-		if (!id) {
-			return res.sendStatus(400);
-		}
-
-		return res.sendStatus(200);
-	} catch (error) {
-		console.log(error);
-		return res.sendStatus(500);
-	}
-});
+app.use(usersRouter);
 
 app.listen(process.env.PORT, () => {
 	console.log(`Server listen on port ${process.env.PORT}`);
