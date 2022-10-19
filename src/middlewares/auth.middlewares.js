@@ -10,7 +10,6 @@ async function signUpValidation(req, res, next) {
     try {
         const checkUserEmail = (await getUserByEmail(email)).rows[0];
 
-        //if(checkUserEmail) return res.status(409).send({ message: "Email already registered" });
         if(checkUserEmail) return conflictResponse(res, "Email already registered");
 
         res.locals.body = { email, password, username, pictureurl }
