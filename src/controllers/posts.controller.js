@@ -1,6 +1,10 @@
 import { serverErrorResponse } from "./helper.controllers.js";
 
-import { listPosts, listHashtags } from "../repositories/posts.repositories.js";
+import {
+  listPosts,
+  listHashtags,
+  listPostsBasedOnNameHashtag,
+} from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
   try {
@@ -22,4 +26,15 @@ async function listHashtagsFunction(req, res) {
   }
 }
 
-export { listTimeline, listHashtagsFunction };
+async function listPostsBasedOnHashtag(req, res) {
+  const { hashtag } = req.params;
+  try {
+    const response = await listPostsBasedOnNameHashtag(hashtag);
+
+    res.status(200).send(response.rows);
+  } catch (error) {
+    serverErrorResponse(res, error);
+  }
+}
+
+export { listTimeline, listHashtagsFunction, listPostsBasedOnHashtag };
