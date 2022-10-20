@@ -1,6 +1,6 @@
 import { serverErrorResponse } from "./helper.controllers.js";
 
-import { listPosts } from "../repositories/posts.repositories.js";
+import { listPosts, listHashtags } from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
   try {
@@ -12,4 +12,14 @@ async function listTimeline(req, res) {
   }
 }
 
-export { listTimeline };
+async function listHashtagsFunction(req, res) {
+  try {
+    const response = await listHashtags();
+
+    res.status(200).send(response.rows);
+  } catch (error) {
+    serverErrorResponse(res, error);
+  }
+}
+
+export { listTimeline, listHashtagsFunction };

@@ -7,4 +7,12 @@ async function listPosts() {
   return response;
 }
 
-export { listPosts };
+async function listHashtags() {
+  const response = await connection.query(
+    `SELECT  hashtags.id, hashtags.name, COUNT(posthashtags.hashtagid) AS "quantidade" FROM posthashtags LEFT JOIN hashtags ON hashtags.id = posthashtags.hashtagid GROUP BY hashtags.name, hashtags.id ORDER BY quantidade DESC LIMIT 10;`
+  );
+
+  return response;
+}
+
+export { listPosts, listHashtags };
