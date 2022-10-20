@@ -1,10 +1,16 @@
 import connection from "../database/database.js";
+import { listUsers } from "../repositories/users.repositories.js";
+import {
+	badRequestResponse,
+	serverErrorResponse,
+	STATUS_CODE,
+} from "./helper.controllers.js";
 
 async function getUserInfo(req, res) {
 	try {
 		const { id } = req.params;
 		if (!id) {
-			return res.sendStatus(400);
+			badRequestResponse(res);
 		}
 		const userExists = await connection.query(
 			`
@@ -28,11 +34,21 @@ async function getUserInfo(req, res) {
         ;`,
 			[id]
 		);
-		return res.status(200).send(userInfo.rows[0]);
+		return res.status(STATUS_CODE.OK).send(userInfo.rows[0]);
 	} catch (error) {
-		console.log(error);
-		return res.sendStatus(500);
+		serverErrorResponse(res, error);
 	}
 }
 
-export { getUserInfo };
+async function searchUsers(req, res) {
+	try {
+		const { text } = req.body;
+		const users = await listUsers(text);
+
+		return res.status(STATUS_CODE.OK).send(users.rows);
+	} catch (error) {
+		serverErrorResponse(res, error);
+	}
+}
+
+export { getUserInfo, searchUsers };
