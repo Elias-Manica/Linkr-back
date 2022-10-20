@@ -43,6 +43,10 @@ function movedPermanentlyResponse(res, text = STATUS_TEXT.MOVED_PERMANENTLY) {
     return res.status(STATUS_CODE.MOVED_PERMANENTLY).send(text);
 }
 
+function badRequestResponse(res, text = STATUS_TEXT.BAD_REQUEST) {
+    return res.status(STATUS_CODE.BAD_REQUEST).send(text);
+}
+
 function unauthorizedResponse(res, text = STATUS_TEXT.UNAUTHORIZED) {
     return res.status(STATUS_CODE.UNAUTHORIZED).send(text);
 }
