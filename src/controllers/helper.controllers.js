@@ -1,32 +1,34 @@
-const STATUS_CODE = Object.freeze({
-    OK: 200, 
-    CREATED: 201, 
-    MOVED_PERMANENTLY: 301, 
-    UNAUTHORIZED: 401, 
-    NOT_FOUND: 404, 
-    CONFLICT: 409, 
-    UNPROCESSABLE_ENTITY: 422, 
-    SERVER_ERROR: 500
+export const STATUS_CODE = Object.freeze({
+	OK: 200,
+	CREATED: 201,
+	MOVED_PERMANENTLY: 301,
+	BAD_REQUEST: 400,
+	UNAUTHORIZED: 401,
+	NOT_FOUND: 404,
+	CONFLICT: 409,
+	UNPROCESSABLE_ENTITY: 422,
+	SERVER_ERROR: 500,
 });
 
 const STATUS_TEXT = Object.freeze({
-    OK: "Ok", 
-    CREATED: "Created", 
-    MOVED_PERMANENTLY: "Moved Permanently", 
-    UNAUTHORIZED: "Unauthorized", 
-    NOT_FOUND: "Not Found",
-    CONFLICT: "Conflict", 
-    UNPROCESSABLE_ENTITY: "Unprocessable Entity", 
-    SERVER_ERROR: "Internal Server Error"
-  });
+	OK: "Ok",
+	CREATED: "Created",
+	MOVED_PERMANENTLY: "Moved Permanently",
+	BAD_REQUEST: "Bad Request",
+	UNAUTHORIZED: "Unauthorized",
+	NOT_FOUND: "Not Found",
+	CONFLICT: "Conflict",
+	UNPROCESSABLE_ENTITY: "Unprocessable Entity",
+	SERVER_ERROR: "Internal Server Error",
+});
 
 function validationSchema(res, schema, body) {
-    const validation = schema.validate(body, { abortEarly: false });
+	const validation = schema.validate(body, { abortEarly: false });
 
-    if(validation.error) {
-        const errorList = validation.error.details.map(error => error.message);
-        return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(errorList);
-    }
+	if (validation.error) {
+		const errorList = validation.error.details.map((error) => error.message);
+		return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(errorList);
+	}
 }
 
 function okResponse(res, text = STATUS_TEXT.OK) {
@@ -62,14 +64,15 @@ function serverErrorResponse(res, error, text = STATUS_TEXT.SERVER_ERROR) {
     return res.status(STATUS_CODE.SERVER_ERROR).send(text);
 }
 
-export { 
-    validationSchema, 
-    okResponse, 
-    createdResponse, 
-    movedPermanentlyResponse, 
-    unauthorizedResponse, 
-    notFoundResponse, 
-    conflictResponse, 
-    unprocessableEntityResponse, 
-    serverErrorResponse
+export {
+	validationSchema,
+	okResponse,
+	createdResponse,
+	movedPermanentlyResponse,
+	badRequestResponse,
+	unauthorizedResponse,
+	notFoundResponse,
+	conflictResponse,
+	unprocessableEntityResponse,
+	serverErrorResponse,
 };
