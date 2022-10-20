@@ -1,6 +1,7 @@
+import { deleteSession, insertSession, insertUser } from "../repositories/auth.repositories.js";
+import { createdResponse, okResponse, serverErrorResponse } from "./helper.controllers.js";
+import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
-import { insertUser } from "../repositories/auth.repositories.js";
-import { createdResponse } from "./helper.controllers.js";
 
 async function createUser(req, res) {
     const { email, password, username, pictureurl } = res.locals.body;
@@ -17,4 +18,19 @@ async function createUser(req, res) {
     }
 }
 
-export { createUser };
+async function createLogin(req, res) {
+    const userid = res.locals;
+    const token = uuid();
+
+    try {
+        await deleteSession(userid);
+        await insertSession(token, userid);
+
+        return okResponse(res, { token });
+        
+    } catch(error) {
+        return serverErrorResponse(res, error);
+    }
+}
+
+export { createUser, createLogin };
