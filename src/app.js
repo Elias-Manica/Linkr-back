@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import usersRouter from "./routers/users.router.js";
 import authRouter from "./routers/auth.routers.js";
+import timelineRouter from "./routers/posts.router.js";
 
 const app = express();
 
@@ -15,12 +16,9 @@ app.get("/status", (req, res) => {
   res.sendStatus(201);
 });
 
-app.get("/modificao", (req, res) => {
-  res.sendStatus(201);
-});
-
 app.use(usersRouter);
 app.use(authRouter);
+app.use(timelineRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listen on port ${process.env.PORT}`);
