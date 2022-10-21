@@ -32,43 +32,40 @@ function validationSchema(res, schema, body) {
 }
 
 function okResponse(res, text = STATUS_TEXT.OK) {
-	return res.status(STATUS_CODE.OK).send({ message: text });
+    return res.status(STATUS_CODE.OK).send(text);
 }
 
 function createdResponse(res, text = STATUS_TEXT.CREATED) {
-	return res.status(STATUS_CODE.CREATED).send({ message: text });
+    return res.status(STATUS_CODE.CREATED).send(text);
 }
 
 function movedPermanentlyResponse(res, text = STATUS_TEXT.MOVED_PERMANENTLY) {
-	return res.status(STATUS_CODE.MOVED_PERMANENTLY).send({ message: text });
+    return res.status(STATUS_CODE.MOVED_PERMANENTLY).send(text);
 }
 
 function badRequestResponse(res, text = STATUS_TEXT.BAD_REQUEST) {
-	return res.status(STATUS_CODE.BAD_REQUEST).send({ message: text });
+    return res.status(STATUS_CODE.BAD_REQUEST).send(text);
 }
 
 function unauthorizedResponse(res, text = STATUS_TEXT.UNAUTHORIZED) {
-	return res.status(STATUS_CODE.UNAUTHORIZED).send({ message: text });
+    return res.status(STATUS_CODE.UNAUTHORIZED).send(text);
 }
 
 function notFoundResponse(res, text = STATUS_TEXT.NOT_FOUND) {
-	return res.status(STATUS_CODE.NOT_FOUND).send({ message: text });
+    return res.status(STATUS_CODE.NOT_FOUND).send(text);
 }
 
 function conflictResponse(res, text = STATUS_TEXT.CONFLICT) {
-	return res.status(STATUS_CODE.CONFLICT).send({ message: text });
+    return res.status(STATUS_CODE.CONFLICT).send(text);
 }
 
-function unprocessableEntityResponse(
-	res,
-	text = STATUS_TEXT.UNPROCESSABLE_ENTITY
-) {
-	return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send({ message: text });
+function unprocessableEntityResponse(res, text = STATUS_TEXT.UNPROCESSABLE_ENTITY) {
+    return res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(text);
 }
 
 function serverErrorResponse(res, error, text = STATUS_TEXT.SERVER_ERROR) {
-	console.error(error);
-	return res.status(STATUS_CODE.SERVER_ERROR).send({ message: text });
+    console.error(error);
+    return res.status(STATUS_CODE.SERVER_ERROR).send(text);
 }
 
 export {
