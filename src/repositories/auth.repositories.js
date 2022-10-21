@@ -5,7 +5,7 @@ async function getUserByEmail(email) {
 }
 
 async function getUserById(userid) {
-    return connection.query(`SELECT * FROM users WHERE userid = $1;`, [userid]);
+    return connection.query(`SELECT * FROM sessions WHERE userid = $1;`, [userid]);
 }
 
 async function insertUser(email, password, username, pictureurl) {

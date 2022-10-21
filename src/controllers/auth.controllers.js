@@ -2,6 +2,7 @@ import { deleteSession, insertSession, insertUser } from "../repositories/auth.r
 import { createdResponse, okResponse, serverErrorResponse } from "./helper.controllers.js";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import connection from "../database/database.js";
 
 async function createUser(req, res) {
     const { email, password, username, pictureurl } = res.locals.body;
@@ -33,4 +34,17 @@ async function createLogin(req, res) {
     }
 }
 
-export { createUser, createLogin };
+async function logout(req, res) {
+    const { userid } = res.locals.user;
+
+    try {
+        await deleteSession(userid);
+
+        return okResponse(res);
+
+    } catch(error) {
+        return serverErrorResponse(res, error);
+    }
+}
+
+export { createUser, createLogin, logout };
