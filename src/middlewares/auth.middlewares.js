@@ -27,21 +27,27 @@ async function checkAuthorization(req, res, next) {
 
 async function signUpValidation(req, res, next) {
     const { email, password, username, pictureurl } = req.body;
-
-    validationSchema(res, signUpSchema, { email, password, username, pictureurl });
-
-    try {
-        const checkUserEmail = (await getUserByEmail(email)).rows[0];
-
-        if(checkUserEmail) return conflictResponse(res, "E-mail already registered!");
-
-        res.locals.body = { email, password, username, pictureurl }
-        next();
-
-    } catch(error) {
-        return serverErrorResponse(res, error);
+  
+    const isValid = signUpSchema.validate(req.body, { abortEarly: false });
+  
+    if (isValid.error) {
+      const error = isValid.error.details.map((erro) => erro.message);
+      res.status(422).send(error);
+      return;
     }
-}
+  
+    try {
+      const checkUserEmail = (await getUserByEmail(email)).rows[0];
+  
+      if (checkUserEmail)
+        return conflictResponse(res, "E-mail already registered!");
+  
+      res.locals.body = { email, password, username, pictureurl };
+      next();
+    } catch (error) {
+      return serverErrorResponse(res, error);
+    }
+  }
 
 async function loginValidation(req, res, next) {
     const { email, password } = req.body;
