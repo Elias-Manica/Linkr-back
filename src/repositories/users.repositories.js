@@ -15,7 +15,7 @@ async function listUsers(text) {
 		`
         SELECT * FROM users WHERE users.username LIKE $1;
     `,
-		['${text}%']
+		[`${text}%`]
 	);
 	return result;
 }
