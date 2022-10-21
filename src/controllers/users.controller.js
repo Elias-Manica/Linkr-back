@@ -31,6 +31,7 @@ async function getUserInfo(req, res) {
 async function searchUsers(req, res) {
 	try {
 		const { text } = req.body;
+		console.log(text);
 		if (!text) {
 			return badRequestResponse(res);
 		}
