@@ -55,7 +55,6 @@ async function loginValidation(req, res, next) {
         const passwordIsValid = bcrypt.compareSync(password, user.password);
         if(!passwordIsValid) return unauthorizedResponse(res, "E-mail or password are invalid!");
 
-        //const userid = user.id;
         const { id, username, pictureurl } = user;
         res.locals.user = { id, username, pictureurl };
         next();
