@@ -19,18 +19,32 @@ async function createUser(req, res) {
 }
 
 async function createLogin(req, res) {
-    const userid = res.locals;
+    const { id, username, pictureurl } = res.locals.user;
+    const userid = id;
     const token = uuid();
 
     try {
         await deleteSession(userid);
         await insertSession(token, userid);
 
-        return okResponse(res, { token });
+        return okResponse(res, { username, pictureurl, token });
         
     } catch(error) {
         return serverErrorResponse(res, error);
     }
 }
 
-export { createUser, createLogin };
+async function logout(req, res) {
+    const { userid } = res.locals.user;
+
+    try {
+        await deleteSession(userid);
+
+        return okResponse(res);
+
+    } catch(error) {
+        return serverErrorResponse(res, error);
+    }
+}
+
+export { createUser, createLogin, logout };

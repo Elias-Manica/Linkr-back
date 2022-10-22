@@ -3,6 +3,6 @@ import { getUserInfo, searchUsers } from "../controllers/users.controller.js";
 
 const usersRouter = express.Router();
 usersRouter.get("/users/:id", getUserInfo);
-usersRouter.get("/users", searchUsers);
+usersRouter.post("/users", searchUsers);
 
 export default usersRouter;

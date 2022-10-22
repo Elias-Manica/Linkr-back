@@ -5,13 +5,14 @@ async function getUserByEmail(email) {
 }
 
 async function getUserById(userid) {
-    return connection.query(`SELECT * FROM users WHERE userid = $1;`, [userid]);
+    return connection.query(`SELECT * FROM sessions WHERE userid = $1;`, [userid]);
 }
 
 async function insertUser(email, password, username, pictureurl) {
     return connection.query(
         `INSERT INTO users (email, password, username, pictureurl) VALUES ($1, $2, $3, $4);`, 
-        [email, password, username, pictureurl]);
+        [email, password, username, pictureurl]
+    );
 }
 
 async function deleteSession(userid) {

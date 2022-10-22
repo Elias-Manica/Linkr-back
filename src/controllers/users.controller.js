@@ -13,7 +13,7 @@ async function getUserInfo(req, res) {
 	try {
 		const { id } = req.params;
 		if (!id) {
-			badRequestResponse(res);
+			return badRequestResponse(res);
 		}
 		const userExists = await listUsersById(id);
 		if (userExists.rowCount === 0) {
@@ -24,18 +24,22 @@ async function getUserInfo(req, res) {
 
 		return res.status(STATUS_CODE.OK).send(userInfo.rows[0]);
 	} catch (error) {
-		serverErrorResponse(res, error);
+		return serverErrorResponse(res, error);
 	}
 }
 
 async function searchUsers(req, res) {
 	try {
 		const { text } = req.body;
+		console.log(text);
+		if (!text) {
+			return badRequestResponse(res);
+		}
 		const users = await listUsers(text);
 
 		return res.status(STATUS_CODE.OK).send(users.rows);
 	} catch (error) {
-		serverErrorResponse(res, error);
+		return serverErrorResponse(res, error);
 	}
 }
 
