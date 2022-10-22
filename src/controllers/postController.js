@@ -1,27 +1,32 @@
 import * as postRepository from "../repositories/postRepository.js";
-import { badRequestResponse, okResponse, serverErrorResponse } from "./controllerHelper.js";
+import {
+  badRequestResponse,
+  okResponse,
+  serverErrorResponse,
+} from "./controllerHelper.js";
 
 async function createPost(req, res) {
-  const { link, text } = req.body;
   const token = req.headers.authorization?.replace("Bearer ", "");
   const uId = await postRepository.getUserIdByToken(token);
-
+  const { link, text } = req.body;
+  
   try {
-  
-    if (!uId.userid)
-      badRequestResponse(res, "Token Inválido!");
-    if (!link) badRequestResponse(res, "Houve um erro ao publicar o seu link");
-    const result = await postRepository.insertPost({
-      link,
-      text,
-      userId: uId.userid,
-    });
-  
-      okResponse(res,"Criado com sucesso!");
-  
+    if(!uId.userid){
+      res.status(400).send('Nao deu');
+   }
+   if (!link ) {
+      return badRequestResponse(res);
+   }
+      const result = await postRepository.insertPost({
+        link,
+        text,
+        userId: uId.userid,
+      });
+      return res.sendStatus(201);
+    
   } catch (error) {
     console.error(error);
-    serverErrorResponse(res, "Erro de servidor");
+    return res.sendStatus(500);
   }
 }
 

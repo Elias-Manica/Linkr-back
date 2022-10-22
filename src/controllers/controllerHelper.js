@@ -4,16 +4,16 @@ const STATUS_CODE = Object.freeze({
     BAD_REQUEST: 400,
     SERVER_ERROR: 500,
 })
-function badRequestResponse(res, text = 'Houve um erro ao publicar seu link'){
-    return res.status(STATUS_CODE.BAD_REQUEST).send(text);
+function badRequestResponse(res){
+    return res.status(STATUS_CODE.BAD_REQUEST).send('Houve um erro ao publicar seu link');
 }
 
-function okResponse(res, text = 'Criado com sucesso!'){
-    return res.status(STATUS_CODE.OK).send(text);
+function okResponse(res){
+    return res.status(STATUS_CODE.OK).send('Criado com sucesso!');
 }
 
-function serverErrorResponse(res, text = 'Erro de servidor'){
-    return res.status(STATUS_CODE.SERVER_ERROR).send(text);
+function serverErrorResponse(res){
+    return res.status(STATUS_CODE.SERVER_ERROR).send('Erro de servidor');
 }
 
 export { badRequestResponse, okResponse, serverErrorResponse };
