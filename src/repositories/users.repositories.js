@@ -23,15 +23,28 @@ async function listUsers(text) {
 async function listUserPosts(id) {
 	const result = await connection.query(
 		`
-        SELECT 
-            users.id, 
-            users.username, 
-            users.pictureurl,
-            json_agg(posts.*) AS posts
-        FROM users
-        JOIN posts ON users.id = posts.userid
-        WHERE users.id = $1
-        GROUP BY (users.id)
+		SELECT p1.id,
+			p1.link,
+			p1.text,
+			p1.date,
+			u1.id AS "userid",
+			u1.username,
+			u1.pictureurl,
+			count(DISTINCT u2.username) AS "qtdlikes",
+			json_agg(DISTINCT u2.username) AS "nameusersliked",
+			json_agg(DISTINCT h2.name) AS "hashtags"
+		FROM posts p1
+		JOIN users u1 ON p1.userid = u1.id
+		LEFT JOIN likes l1 ON p1.id = l1.postid
+		LEFT JOIN users u2 ON u2.id = l1.userid
+		LEFT JOIN posthashtags h1 ON h1.postid = p1.id
+		LEFT JOIN hashtags h2 ON h2.id = h1.hashtagid
+		WHERE u1.id = $1
+		GROUP BY p1.id,
+			u1.username,
+			u1.pictureurl,
+			u1.id
+		ORDER BY p1.id DESC
         ;`,
 		[id]
 	);
