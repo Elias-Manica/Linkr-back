@@ -22,7 +22,7 @@ async function getUserInfo(req, res) {
 
 		const userInfo = await listUserPosts(id);
 
-		return res.status(STATUS_CODE.OK).send(userInfo.rows[0]);
+		return res.status(STATUS_CODE.OK).send(userInfo.rows);
 	} catch (error) {
 		return serverErrorResponse(res, error);
 	}
