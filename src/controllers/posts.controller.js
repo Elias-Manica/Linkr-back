@@ -4,6 +4,7 @@ import {
   listPosts,
   listHashtags,
   listPostsBasedOnNameHashtag,
+  deletePostsBasedOnId,
 } from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
@@ -37,4 +38,21 @@ async function listPostsBasedOnHashtag(req, res) {
   }
 }
 
-export { listTimeline, listHashtagsFunction, listPostsBasedOnHashtag };
+async function deletePost(req, res) {
+  const id = res.locals.postid;
+
+  try {
+    await deletePostsBasedOnId(id);
+    console.log(id);
+    res.send(204);
+  } catch (error) {
+    serverErrorResponse(res, error);
+  }
+}
+
+export {
+  listTimeline,
+  listHashtagsFunction,
+  listPostsBasedOnHashtag,
+  deletePost,
+};

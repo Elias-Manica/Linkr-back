@@ -1,4 +1,4 @@
-import {connection} from "../database/database.js";
+import { connection } from "../database/database.js";
 
 async function listPosts() {
   const response = await connection.query(
@@ -24,4 +24,24 @@ async function listPostsBasedOnNameHashtag(name) {
   return response;
 }
 
-export { listPosts, listHashtags, listPostsBasedOnNameHashtag };
+async function listPostBasedOnId(id) {
+  const response = await connection.query(`SELECT * FROM posts WHERE id=$1`, [
+    id,
+  ]);
+  return response;
+}
+
+async function deletePostsBasedOnId(id) {
+  const response = await connection.query(`DELETE FROM posts WHERE id = $1;`, [
+    id,
+  ]);
+  return response;
+}
+
+export {
+  listPosts,
+  listHashtags,
+  listPostsBasedOnNameHashtag,
+  listPostBasedOnId,
+  deletePostsBasedOnId,
+};
