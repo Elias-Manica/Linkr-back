@@ -17,7 +17,7 @@ async function createPost(req, res) {
       userId: uId.userid,
     });
   
-      okResponse(res, "Criado com sucesso!");
+      okResponse(res,"Criado com sucesso!");
   
   } catch (error) {
     console.error(error);
