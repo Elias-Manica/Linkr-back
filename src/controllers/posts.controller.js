@@ -5,6 +5,8 @@ import {
   listHashtags,
   listPostsBasedOnNameHashtag,
   deletePostsBasedOnId,
+  deletelikesBasedOnPostid,
+  deleteHashtagBasedOnPostid,
 } from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
@@ -43,8 +45,12 @@ async function deletePost(req, res) {
 
   try {
     await deletePostsBasedOnId(id);
-    console.log(id);
-    res.send(204);
+
+    await deleteHashtagBasedOnPostid(id);
+
+    await deletelikesBasedOnPostid(id);
+
+    res.sendStatus(204);
   } catch (error) {
     serverErrorResponse(res, error);
   }

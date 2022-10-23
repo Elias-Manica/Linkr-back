@@ -38,10 +38,28 @@ async function deletePostsBasedOnId(id) {
   return response;
 }
 
+async function deletelikesBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM likes WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
+async function deleteHashtagBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM posthashtags WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
 export {
   listPosts,
   listHashtags,
   listPostsBasedOnNameHashtag,
   listPostBasedOnId,
   deletePostsBasedOnId,
+  deletelikesBasedOnPostid,
+  deleteHashtagBasedOnPostid,
 };
