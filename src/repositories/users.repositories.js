@@ -23,7 +23,13 @@ async function listUsers(text) {
 async function listUserPosts(id) {
 	const result = await connection.query(
 		`
-		SELECT p1.id,
+		SELECT
+			json_build_object(
+				'id', u1.id,
+				'username', u1.username,
+				'pictureurl', u1.pictureurl
+			) AS "userInfo",
+			p1.id,
 			p1.link,
 			p1.text,
 			p1.date,

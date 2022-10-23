@@ -9,7 +9,7 @@ import {
 	STATUS_CODE,
 } from "./helper.controllers.js";
 
-async function getUserInfo(req, res) {
+async function getUserPosts(req, res) {
 	try {
 		const { id } = req.params;
 		if (!id) {
@@ -43,4 +43,4 @@ async function searchUsers(req, res) {
 	}
 }
 
-export { getUserInfo, searchUsers };
+export { getUserPosts, searchUsers };
