@@ -9,7 +9,7 @@ import {
 	STATUS_CODE,
 } from "./helper.controllers.js";
 
-async function getUserInfo(req, res) {
+async function getUserPosts(req, res) {
 	try {
 		const { id } = req.params;
 		if (!id) {
@@ -22,7 +22,7 @@ async function getUserInfo(req, res) {
 
 		const userInfo = await listUserPosts(id);
 
-		return res.status(STATUS_CODE.OK).send(userInfo.rows[0]);
+		return res.status(STATUS_CODE.OK).send(userInfo.rows);
 	} catch (error) {
 		return serverErrorResponse(res, error);
 	}
@@ -43,4 +43,4 @@ async function searchUsers(req, res) {
 	}
 }
 
-export { getUserInfo, searchUsers };
+export { getUserPosts, searchUsers };
