@@ -1,4 +1,4 @@
-import {connection} from "../database/database.js";
+import { connection } from "../database/database.js";
 
 async function listPosts() {
   const response = await connection.query(
@@ -24,4 +24,78 @@ async function listPostsBasedOnNameHashtag(name) {
   return response;
 }
 
-export { listPosts, listHashtags, listPostsBasedOnNameHashtag };
+async function listPostBasedOnId(id) {
+  const response = await connection.query(`SELECT * FROM posts WHERE id=$1`, [
+    id,
+  ]);
+  return response;
+}
+
+async function deletePostsBasedOnId(id) {
+  const response = await connection.query(`DELETE FROM posts WHERE id = $1;`, [
+    id,
+  ]);
+  return response;
+}
+
+async function deletelikesBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM likes WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
+async function deleteHashtagBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM posthashtags WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
+async function listHashtag(hashtag) {
+  const response = await connection.query(
+    `SELECT * FROM hashtags WHERE name=$1;`,
+    [hashtag]
+  );
+  return response;
+}
+
+async function insertHashtag(name) {
+  const response = await connection.query(
+    `INSERT INTO hashtags (name) VALUES ($1);`,
+    [name]
+  );
+  return response;
+}
+
+async function listPostCreated(userid, text) {
+  const response = await connection.query(
+    `SELECT * FROM posts WHERE userid=$1 AND "text"=$2 ORDER BY id DESC;`,
+    [userid, text]
+  );
+  return response;
+}
+
+async function insertHashtagPost(postid, hashtagid) {
+  const response = await connection.query(
+    `INSERT INTO posthashtags (postid, hashtagid) VALUES ($1, $2);`,
+    [postid, hashtagid]
+  );
+  return response;
+}
+
+export {
+  listPosts,
+  listHashtags,
+  listPostsBasedOnNameHashtag,
+  listPostBasedOnId,
+  deletePostsBasedOnId,
+  deletelikesBasedOnPostid,
+  deleteHashtagBasedOnPostid,
+  listHashtag,
+  insertHashtag,
+  listPostCreated,
+  insertHashtagPost,
+};
