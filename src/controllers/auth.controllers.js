@@ -27,7 +27,7 @@ async function createLogin(req, res) {
         await deleteSession(userid);
         await insertSession(token, userid);
 
-        return okResponse(res, { username, pictureurl, token });
+        return okResponse(res, { userid, username, pictureurl, token });
         
     } catch(error) {
         return serverErrorResponse(res, error);
