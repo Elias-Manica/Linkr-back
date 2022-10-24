@@ -1,4 +1,4 @@
-import connection from "../database/database.js";
+import {connection} from "../database/database.js";
 
 async function getUserByEmail(email) {
     return connection.query(`SELECT * FROM users WHERE email = $1;`, [email]);
