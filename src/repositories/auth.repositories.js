@@ -26,5 +26,16 @@ async function insertSession(token, userid) {
 async function getSessionByToken(token) {
     return connection.query(`SELECT * FROM sessions WHERE token = $1;`, [token]);
 }
+async function insertLikes(userid, postid){
+    return connection.query(`INSERT INTO likes (userid, postid) VALUES ($1, $2);`, [userid, postid]);
+}
+async function deleteLikes(userid, postid){
+    return connection.query(`DELETE FROM likes WHERE userid = $1 AND postid = $2;`,[userid, postid]);
+}
+async function searchALike(userid, postid){
+    return connection.query(`SELECT postid, userid FROM likes WHERE postid = $1 AND userid = $2;`, [postid, userid])
+}
 
-export { getUserByEmail, getUserById, insertUser, deleteSession, insertSession, getSessionByToken };
+
+export { getUserByEmail, getUserById, insertUser, deleteSession, insertSession, 
+    getSessionByToken, insertLikes, deleteLikes, searchALike };
