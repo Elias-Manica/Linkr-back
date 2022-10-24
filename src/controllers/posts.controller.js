@@ -44,11 +44,11 @@ async function deletePost(req, res) {
   const id = res.locals.postid;
 
   try {
-    await deletePostsBasedOnId(id);
-
     await deleteHashtagBasedOnPostid(id);
 
     await deletelikesBasedOnPostid(id);
+
+    await deletePostsBasedOnId(id);
 
     res.sendStatus(204);
   } catch (error) {
