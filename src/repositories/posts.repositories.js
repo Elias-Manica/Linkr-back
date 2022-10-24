@@ -54,6 +54,38 @@ async function deleteHashtagBasedOnPostid(postId) {
   return response;
 }
 
+async function listHashtag(hashtag) {
+  const response = await connection.query(
+    `SELECT * FROM hashtags WHERE name=$1;`,
+    [hashtag]
+  );
+  return response;
+}
+
+async function insertHashtag(name) {
+  const response = await connection.query(
+    `INSERT INTO hashtags (name) VALUES ($1);`,
+    [name]
+  );
+  return response;
+}
+
+async function listPostCreated(userid, text) {
+  const response = await connection.query(
+    `SELECT * FROM posts WHERE userid=$1 AND "text"=$2 ORDER BY id DESC;`,
+    [userid, text]
+  );
+  return response;
+}
+
+async function insertHashtagPost(postid, hashtagid) {
+  const response = await connection.query(
+    `INSERT INTO posthashtags (postid, hashtagid) VALUES ($1, $2);`,
+    [postid, hashtagid]
+  );
+  return response;
+}
+
 export {
   listPosts,
   listHashtags,
@@ -62,4 +94,8 @@ export {
   deletePostsBasedOnId,
   deletelikesBasedOnPostid,
   deleteHashtagBasedOnPostid,
+  listHashtag,
+  insertHashtag,
+  listPostCreated,
+  insertHashtagPost,
 };
