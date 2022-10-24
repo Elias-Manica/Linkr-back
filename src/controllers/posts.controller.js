@@ -112,17 +112,13 @@ async function editPostFunction(req, res) {
 
     listInsertHashtag.map((value) => {
       insertHashtag(value).then((item) => {
-        console.log(item, " item");
-        console.log(value, " value");
         listHashtagBasedOnName(value).then((itemSerach) => {
-          console.log(itemSerach.rows, " search");
-
           if (itemSerach.rows.length > 0) {
+            console.log(value, " value");
             insertHashtagPost(infosPosts.id, itemSerach.rows[0].id);
           } else {
-            console.log("entrou com o value ", value);
             listNameHashtag(value).then((name) => {
-              console.log(name.rows, " name");
+              console.log(value, " value dentro");
               insertHashtagPost(infosPosts.id, name.rows[0].id);
             });
           }
