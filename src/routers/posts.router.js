@@ -1,20 +1,22 @@
 import express from "express";
 
 import {
-  listTimeline,
-  listHashtagsFunction,
-  listPostsBasedOnHashtag,
-  deletePost,
-  editPostFunction,
-  likeAPost,
-  dislikeAPost,
+	listTimeline,
+	listHashtagsFunction,
+	listPostsBasedOnHashtag,
+	deletePost,
+	editPostFunction,
+	likeAPost,
+	dislikeAPost,
+	commentAPost,
 } from "../controllers/posts.controller.js";
 
 import { checkAuthorization } from "../middlewares/auth.middlewares.js";
 
 import {
-  isAvaiableToDelete,
-  isAvaiableToEdit,
+	hasDescription,
+	isAvaiableToDelete,
+	isAvaiableToEdit,
 } from "../middlewares/post.middleware.js";
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
@@ -27,10 +29,16 @@ router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
 router.post("/post/like/:postId", likeAPost);
 router.delete("/post/dislike/:postId", dislikeAPost);
 router.put(
-  "/post/:id",
-  checkAuthorization,
-  isAvaiableToEdit,
-  validatePostSchema,
-  editPostFunction
+	"/post/:id",
+	checkAuthorization,
+	isAvaiableToEdit,
+	validatePostSchema,
+	editPostFunction
+);
+router.post(
+	"/post/comment/:postId",
+	checkAuthorization,
+	hasDescription,
+	commentAPost
 );
 export default router;
