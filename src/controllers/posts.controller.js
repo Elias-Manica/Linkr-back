@@ -171,7 +171,7 @@ async function commentAPost(req, res) {
 		const user = res.locals.user;
 
 		await insertComment(postId, user.userid, description);
-		return okResponse(res);
+		return createdResponse(res);
 	} catch (error) {
 		serverErrorResponse(res, error);
 	}
