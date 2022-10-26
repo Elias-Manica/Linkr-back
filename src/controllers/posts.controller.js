@@ -20,11 +20,21 @@ import {
   listNameHashtag,
   insertComment,
   listComment,
+  listPostsPagination,
 } from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
+  const { page } = req.query;
   try {
-    const response = await listPosts();
+    if (!page) {
+      const response = await listPosts(20, 0);
+
+      res.status(200).send(response.rows);
+      return;
+    }
+    const valuePage = (Number(page) + 1) * 10;
+
+    const response = await listPosts(10, valuePage);
 
     res.status(200).send(response.rows);
   } catch (error) {
