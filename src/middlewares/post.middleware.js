@@ -81,11 +81,11 @@ function queryIsValid(req, res, next) {
   const { page } = req.query;
 
   if (page) {
-    if (!Number(page)) {
-      res.status(400).send({ message: "Query invalid" });
+    if (Number(page) === 0) {
+      next();
       return;
     }
-    if (Number(page) === 0) {
+    if (!Number(page)) {
       res.status(400).send({ message: "Query invalid" });
       return;
     }

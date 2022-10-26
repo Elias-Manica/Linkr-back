@@ -32,6 +32,12 @@ async function listTimeline(req, res) {
       res.status(200).send(response.rows);
       return;
     }
+    if (Number(page) === 0) {
+      const response = await listPosts(20, 0);
+
+      res.status(200).send(response.rows);
+      return;
+    }
     const valuePage = (Number(page) + 1) * 10;
 
     const response = await listPosts(10, valuePage);
