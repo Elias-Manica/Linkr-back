@@ -10,6 +10,7 @@ import {
   dislikeAPost,
   commentAPost,
   listCommentPost,
+  rePost,
 } from "../controllers/posts.controller.js";
 
 import { checkAuthorization } from "../middlewares/auth.middlewares.js";
@@ -19,6 +20,7 @@ import {
   isAvaiableToDelete,
   isAvaiableToEdit,
   idIsValid,
+  isAvaiableToRepost,
 } from "../middlewares/post.middleware.js";
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
@@ -28,6 +30,7 @@ router.get("/timeline", listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
+router.post("/post/:id", checkAuthorization, isAvaiableToRepost, rePost);
 router.post("/post/like/:postId", likeAPost);
 router.delete("/post/dislike/:postId", dislikeAPost);
 router.put(

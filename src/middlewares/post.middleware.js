@@ -3,7 +3,7 @@ import {
   serverErrorResponse,
 } from "../controllers/helper.controllers.js";
 
-import { listPostBasedOnId } from "../repositories/posts.repositories.js";
+import { getRepostByIds, listPostBasedOnId } from "../repositories/posts.repositories.js";
 
 async function isAvaiableToDelete(req, res, next) {
   const user = res.locals.user;
@@ -57,6 +57,34 @@ async function isAvaiableToEdit(req, res, next) {
   }
 }
 
+async function isAvaiableToRepost(req, res, next) {
+  const user = res.locals.user;
+  const { id } = req.params;
+  try {
+    const checkPostId = await listPostBasedOnId(id);
+
+    if (checkPostId.rows.length === 0) {
+      res.status(404).send({ message: "O post não foi encontrado" });
+      return;
+    }
+
+    const checkRepost = (await getRepostByIds(id, user.userid)).rows[0];
+
+    if (checkRepost) {
+      res
+        .status(401)
+        .send({ message: "Você não tem permissão para repostar esse post!" });
+      return;
+    }
+
+    res.locals.postid = checkPostId.rows[0].id;
+
+    next();
+  } catch (error) {
+    return serverErrorResponse(res, error);
+  }
+}
+
 function hasDescription(req, res, next) {
   const { description } = req.body;
 
@@ -77,4 +105,4 @@ function idIsValid(req, res, next) {
   next();
 }
 
-export { isAvaiableToDelete, isAvaiableToEdit, hasDescription, idIsValid };
+export { isAvaiableToDelete, isAvaiableToEdit, isAvaiableToRepost, hasDescription, idIsValid };
