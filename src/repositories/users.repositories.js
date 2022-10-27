@@ -1,28 +1,28 @@
-import {connection }from "../database/database.js";
+import { connection } from "../database/database.js";
 
 async function listUsersById(id) {
-	const result = await connection.query(
-		`
+  const result = await connection.query(
+    `
         SELECT * FROM users WHERE id = $1;
     `,
-		[id]
-	);
-	return result;
+    [id]
+  );
+  return result;
 }
 
 async function listUsers(text) {
-	const result = await connection.query(
-		`
+  const result = await connection.query(
+    `
         SELECT * FROM users WHERE users.username LIKE $1;
     `,
-		[`${text}%`]
-	);
-	return result;
+    [`${text}%`]
+  );
+  return result;
 }
 
 async function listUserPosts(id) {
-	const result = await connection.query(
-		`
+  const result = await connection.query(
+    `
 		SELECT
 			json_build_object(
 				'id', u1.id,
@@ -52,9 +52,26 @@ async function listUserPosts(id) {
 			u1.id
 		ORDER BY p1.id DESC
         ;`,
-		[id]
-	);
+    [id]
+  );
+  return result;
+}
+
+async function followUser( userid, followid ) {
+  const result = await connection.query(
+    `INSERT INTO followers (userid, follow) VALUES ($1, $2);`,
+    [userid, followid]
+  );
+  return result;
+}
+async function unfollowDelete(userid, followid){
+ const result = await connection.query(`DELETE FROM followers WHERE userid = $1 AND follow = $2;`, [userid, followid])
+	return result;
+}
+async function verifyFollow(userid,followid){
+	const result = await connection.query(`SELECT * FROM followers WHERE userid=$1 AND follow = $2;`,[userid, followid]);
 	return result;
 }
 
-export { listUsers, listUserPosts, listUsersById };
+
+export { listUsers, listUserPosts, listUsersById, followUser, unfollowDelete, verifyFollow };
