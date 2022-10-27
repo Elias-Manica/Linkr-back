@@ -19,12 +19,13 @@ import {
   isAvaiableToDelete,
   isAvaiableToEdit,
   idIsValid,
+  queryIsValid,
 } from "../middlewares/post.middleware.js";
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
 const router = express.Router();
 
-router.get("/timeline", listTimeline);
+router.get("/timeline", queryIsValid, listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
