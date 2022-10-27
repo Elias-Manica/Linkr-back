@@ -20,6 +20,9 @@ import {
   isAvaiableToEdit,
   idIsValid,
   queryIsValid,
+  isPostValid,
+  postIsavableToDeslike,
+  postIsLiked,
 } from "../middlewares/post.middleware.js";
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
@@ -29,8 +32,22 @@ router.get("/timeline", queryIsValid, listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
-router.post("/post/like/:postId", likeAPost);
-router.delete("/post/dislike/:postId", dislikeAPost);
+router.post(
+  "/post/like/:postId",
+  idIsValid,
+  checkAuthorization,
+  isPostValid,
+  postIsLiked,
+  likeAPost
+);
+router.post(
+  "/post/dislike/:postId",
+  idIsValid,
+  checkAuthorization,
+  isPostValid,
+  postIsavableToDeslike,
+  dislikeAPost
+);
 router.put(
   "/post/:id",
   checkAuthorization,

@@ -123,22 +123,22 @@ async function insertHashtagPost(postid, hashtagid) {
   return response;
 }
 
-async function insertLikeInPosts(userid, postid) {
+async function insertLikeInPosts(postid, userid) {
   const response = await connection.query(
     `
-    INSERT INTO likes (userid, postid) VALUES ($1, $2);
+    INSERT INTO likes (postid, userid) VALUES ($1, $2);
   `,
-    [userid, postid]
+    [postid, userid]
   );
   return response;
 }
 
-async function deleteLikeInPosts(userid, postid) {
+async function deleteLikeInPosts(postid, userid) {
   const response = await connection.query(
     `
-    DELETE FROM likes WHERE userid = $1 AND postid = $2;
+    DELETE FROM likes WHERE postid = $1 AND userid = $2;
   `,
-    [userid, postid]
+    [postid, userid]
   );
   return response;
 }
@@ -224,6 +224,21 @@ async function listPostsPagination(offset) {
   return response;
 }
 
+async function hasPost(postid) {
+  const response = await connection.query(`SELECT * FROM posts WHERE id=$1;`, [
+    postid,
+  ]);
+  return response;
+}
+
+async function hasLikedPost(postid, userid) {
+  const response = await connection.query(
+    `SELECT * FROM likes WHERE postid=$1 AND userid=$2;`,
+    [postid, userid]
+  );
+  return response;
+}
+
 export {
   listPosts,
   listHashtags,
@@ -244,4 +259,6 @@ export {
   insertComment,
   listComment,
   listPostsPagination,
+  hasPost,
+  hasLikedPost,
 };

@@ -86,11 +86,10 @@ async function deletePost(req, res) {
 }
 
 async function likeAPost(req, res) {
+  const user = res.locals.user;
+  const response = res.locals.response;
   try {
-    const { postId } = req.params;
-    const { userId } = req.body;
-
-    await insertLikeInPosts(userId, postId);
+    await insertLikeInPosts(response[0].id, user.userid);
 
     return createdResponse(res);
   } catch (error) {
@@ -99,11 +98,10 @@ async function likeAPost(req, res) {
 }
 
 async function dislikeAPost(req, res) {
+  const user = res.locals.user;
+  const response = res.locals.response;
   try {
-    const { postId } = req.params;
-    const { userId } = req.body;
-
-    await deleteLikeInPosts(userId, postId);
+    await deleteLikeInPosts(response[0].id, user.userid);
 
     return okResponse(res);
   } catch (error) {
