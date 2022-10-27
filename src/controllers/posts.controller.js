@@ -21,6 +21,7 @@ import {
   insertComment,
   listComment,
   listPostsPagination,
+  hasLikedPost,
 } from "../repositories/posts.repositories.js";
 
 async function listTimeline(req, res) {
@@ -216,6 +217,22 @@ async function listCommentPost(req, res) {
   }
 }
 
+async function postIsLikedFunction(req, res) {
+  const { postId } = req.params;
+  const user = res.locals.user;
+  try {
+    const response = await hasLikedPost(postId, user.userid);
+    if (response.rows.length > 0) {
+      res.send({ isLiked: true });
+      return;
+    }
+    res.send({ isLiked: false });
+    return;
+  } catch (error) {
+    serverErrorResponse(res, error);
+  }
+}
+
 export {
   listTimeline,
   listHashtagsFunction,
@@ -227,4 +244,5 @@ export {
   editPostFunction,
   commentAPost,
   listCommentPost,
+  postIsLikedFunction,
 };

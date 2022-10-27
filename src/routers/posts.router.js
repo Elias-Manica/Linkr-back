@@ -10,6 +10,7 @@ import {
   dislikeAPost,
   commentAPost,
   listCommentPost,
+  postIsLikedFunction,
 } from "../controllers/posts.controller.js";
 
 import { checkAuthorization } from "../middlewares/auth.middlewares.js";
@@ -62,4 +63,10 @@ router.post(
   commentAPost
 );
 router.get("/post/comment/:postId", idIsValid, listCommentPost);
+router.get(
+  "/post/like/:postId",
+  checkAuthorization,
+  isPostValid,
+  postIsLikedFunction
+);
 export default router;
