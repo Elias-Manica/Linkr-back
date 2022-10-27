@@ -21,12 +21,14 @@ import {
   isAvaiableToEdit,
   idIsValid,
   isAvaiableToRepost,
+	queryIsValid,
 } from "../middlewares/post.middleware.js";
+
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
 const router = express.Router();
 
-router.get("/timeline", listTimeline);
+router.get("/timeline", queryIsValid, checkAuthorization, listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
@@ -34,17 +36,17 @@ router.post("/post/:id", checkAuthorization, isAvaiableToRepost, rePost);
 router.post("/post/like/:postId", likeAPost);
 router.delete("/post/dislike/:postId", dislikeAPost);
 router.put(
-  "/post/:id",
-  checkAuthorization,
-  isAvaiableToEdit,
-  validatePostSchema,
-  editPostFunction
+	"/post/:id",
+	checkAuthorization,
+	isAvaiableToEdit,
+	validatePostSchema,
+	editPostFunction
 );
 router.post(
-  "/post/comment/:postId",
-  checkAuthorization,
-  hasDescription,
-  commentAPost
+	"/post/comment/:postId",
+	checkAuthorization,
+	hasDescription,
+	commentAPost
 );
 router.get("/post/comment/:postId", idIsValid, listCommentPost);
 export default router;

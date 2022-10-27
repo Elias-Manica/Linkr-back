@@ -105,4 +105,34 @@ function idIsValid(req, res, next) {
   next();
 }
 
-export { isAvaiableToDelete, isAvaiableToEdit, isAvaiableToRepost, hasDescription, idIsValid };
+function queryIsValid(req, res, next) {
+  const { page } = req.query;
+
+  if (page) {
+    console.log(page);
+    if (Number(page) < 0) {
+      res.status(400).send({ message: "Query invalid" });
+      return;
+    }
+
+    if (Number(page) === 0) {
+      next();
+      return;
+    }
+    if (!Number(page)) {
+      res.status(400).send({ message: "Query invalid" });
+      return;
+    }
+  }
+
+  next();
+}
+
+export {
+  isAvaiableToDelete,
+  isAvaiableToEdit,
+  hasDescription, 
+  isAvaiableToRepost, 
+  idIsValid,
+  queryIsValid,
+};
