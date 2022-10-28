@@ -26,22 +26,23 @@ import {
 
 async function listTimeline(req, res) {
   const { page } = req.query;
+  const user = res.locals.user;
   try {
     if (!page) {
-      const response = await listPosts(20, 0);
+      const response = await listPosts(20, 0, user.userid);
 
       res.status(200).send(response.rows);
       return;
     }
     if (Number(page) === 0) {
-      const response = await listPosts(20, 0);
+      const response = await listPosts(20, 0, user.userid);
 
       res.status(200).send(response.rows);
       return;
     }
     const valuePage = (Number(page) + 1) * 10;
 
-    const response = await listPosts(10, valuePage);
+    const response = await listPosts(10, valuePage, user.userid);
 
     res.status(200).send(response.rows);
   } catch (error) {
@@ -199,19 +200,14 @@ async function listCommentPost(req, res) {
   try {
     const response = await listComment(postId);
 
-    console.log(response);
+    console.log(response.rows);
 
     if (response.rows.length == 0) {
-      res.status(200).send(response.rows);
-      return;
-    }
-
-    if (response.rows[0].comments[0].userid === null) {
       res.status(200).send([]);
       return;
     }
 
-    res.status(200).send(response.rows[0].comments);
+    res.status(200).send(response.rows);
   } catch (error) {
     serverErrorResponse(res, error);
   }

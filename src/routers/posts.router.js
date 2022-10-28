@@ -29,7 +29,7 @@ import validatePostSchema from "../middlewares/postMiddleware.js";
 
 const router = express.Router();
 
-router.get("/timeline", queryIsValid, listTimeline);
+router.get("/timeline", queryIsValid, checkAuthorization, listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);

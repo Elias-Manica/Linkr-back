@@ -1,6 +1,6 @@
 import { connection } from "../database/database.js";
 
-async function listPosts(limit, offset) {
+async function listPosts(limit, offset, userid) {
   const response = await connection.query(
     `
     SELECT 
@@ -18,11 +18,13 @@ async function listPosts(limit, offset) {
       LEFT JOIN posthashtags H1 ON H1.postid = P1.id 
       LEFT JOIN hashtags H2 ON h2.id = h1.hashtagid 
       LEFT JOIN comments C1 ON C1.postid = P1.id
+      JOIN followers ON followers.follow = P1.userid
+      WHERE followers.userid = $3
       GROUP BY P1.id, U1.username, U1.pictureurl, U1.id 
       ORDER BY P1.id DESC 
     LIMIT $1
 	  OFFSET $2;`,
-    [limit, offset]
+    [limit, offset, userid]
   );
   return response;
 }
@@ -180,15 +182,15 @@ async function insertComment(postid, userid, description) {
 async function listComment(postid) {
   const response = await connection.query(
     `
-	SELECT 
-		json_agg( jsonb_build_object('idcomment', C1.id, 'userid', U3.id, 'username', U3.username, 'urluser', U3.pictureurl,  'comment', C1.description, 'follow', CASE WHEN F1.id > 0 THEN true ELSE false END, 'owner', CASE WHEN  P1.userid = U3.id THEN true ELSE false END) ORDER BY C1.id) AS "comments" 
-		FROM posts P1 
-		JOIN users U1 ON P1.userid = U1.id 
-		LEFT JOIN comments C1 ON C1.postid = P1.id
-		LEFT JOIN users U3 ON U3.id = C1.userid
-		LEFT JOIN followers F1 ON U3.id = F1.follow
-		WHERE P1.id = $1
-		GROUP BY P1.id
+    SELECT 
+      DISTINCT(C1.id) ,  U3.id,  U3.username, U3.pictureurl,  C1.description, (CASE WHEN F1.id > 0 THEN true ELSE false END) AS follow,  (CASE WHEN  P1.userid = U3.id THEN true ELSE false END) AS owner 
+      FROM posts P1 
+      JOIN users U1 ON P1.userid = U1.id 
+      LEFT JOIN comments C1 ON C1.postid = P1.id
+      LEFT JOIN users U3 ON U3.id = C1.userid
+      LEFT JOIN followers F1 ON U3.id = F1.follow
+      WHERE P1.id = $1
+      GROUP BY P1.id,C1.id, U3.id, F1.id
   	LIMIT 20;
   	`,
     [postid]
