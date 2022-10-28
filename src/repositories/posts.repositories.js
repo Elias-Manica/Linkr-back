@@ -78,7 +78,7 @@ async function listPostsBasedOnNameHashtag(name) {
 		LEFT JOIN comments C1 ON C1.postid = P1.id
 		LEFT JOIN reposts R1 ON R1.postid = P1.id
 		LEFT JOIN followers ON followers.follow = P1.userid
-	WHERE h2.name= 'dev'
+	WHERE h2.name= $1
     GROUP BY P1.id, U1.username, U1.pictureurl, U1.id  
     ORDER BY P1.id DESC 
     LIMIT 20 ;`,
