@@ -3,7 +3,12 @@ import {
   serverErrorResponse,
 } from "../controllers/helper.controllers.js";
 
-import { getRepostByIds, listPostBasedOnId } from "../repositories/posts.repositories.js";
+import {
+  hasLikedPost,
+  hasPost,
+  getRepostByIds,
+  listPostBasedOnId,
+} from "../repositories/posts.repositories.js";
 
 async function isAvaiableToDelete(req, res, next) {
   const user = res.locals.user;
@@ -128,11 +133,66 @@ function queryIsValid(req, res, next) {
   next();
 }
 
+async function isPostValid(req, res, next) {
+  const { postId } = req.params;
+  try {
+    const response = await hasPost(postId);
+
+    if (response.rows.length === 0) {
+      res.status(404).send({ message: "Post not found!" });
+      return;
+    }
+
+    res.locals.response = response.rows;
+    next();
+  } catch (error) {
+    return serverErrorResponse(res, error);
+  }
+}
+
+async function postIsLiked(req, res, next) {
+  const { postId } = req.params;
+  const user = res.locals.user;
+  try {
+    const response = await hasLikedPost(postId, user.userid);
+    console.log(response, " likou");
+
+    if (response.rows.length > 0) {
+      res.status(400).send({ message: "you already liked this post" });
+      return;
+    }
+    next();
+  } catch (error) {
+    return serverErrorResponse(res, error);
+  }
+}
+
+async function postIsavableToDeslike(req, res, next) {
+  const { postId } = req.params;
+  const user = res.locals.user;
+  try {
+    const response = await hasLikedPost(postId, user.userid);
+    console.log(response, " likou");
+
+    if (response.rows.length > 0) {
+      next();
+      return;
+    }
+
+    res.status(400).send({ message: "You dont like this post" });
+  } catch (error) {
+    return serverErrorResponse(res, error);
+  }
+}
+
 export {
   isAvaiableToDelete,
   isAvaiableToEdit,
-  hasDescription, 
-  isAvaiableToRepost, 
+  hasDescription,
+  isAvaiableToRepost,
   idIsValid,
   queryIsValid,
+  isPostValid,
+  postIsLiked,
+  postIsavableToDeslike,
 };
