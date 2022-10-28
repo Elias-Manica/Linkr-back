@@ -28,7 +28,7 @@ async function listPosts(limit, offset, userid) {
 		LEFT JOIN reposts R1 ON R1.postid = P1.id
 		JOIN followers ON followers.follow = P1.userid
 	WHERE
-		followers.userid = $3
+		followers.userid = $3 OR P1.userid = $4
 	GROUP BY
 		P1.id,
 		U1.username,
@@ -38,7 +38,7 @@ async function listPosts(limit, offset, userid) {
 		P1.id DESC
 	LIMIT $1 OFFSET $2;
 	`,
-    [limit, offset, userid]
+    [limit, offset, userid, userid]
   );
   return response;
 }
