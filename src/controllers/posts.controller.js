@@ -20,6 +20,9 @@ import {
   listNameHashtag,
   insertComment,
   listComment,
+  insertRepost,
+  deleteCommentsBasedOnPostid,
+  deleteRepostsBasedOnPostid,
   listPostsPagination,
   hasLikedPost,
 } from "../repositories/posts.repositories.js";
@@ -79,9 +82,26 @@ async function deletePost(req, res) {
 
     await deletelikesBasedOnPostid(id);
 
+    await deleteCommentsBasedOnPostid(id);
+
+    await deleteRepostsBasedOnPostid(id);
+
     await deletePostsBasedOnId(id);
 
     res.sendStatus(204);
+  } catch (error) {
+    serverErrorResponse(res, error);
+  }
+}
+
+async function rePost(req, res) {
+  const id = res.locals.postid;
+  const { userid } = res.locals.user;
+
+  try {
+    await insertRepost(id, userid);
+
+    return createdResponse(res);
   } catch (error) {
     serverErrorResponse(res, error);
   }
@@ -234,6 +254,7 @@ export {
   listHashtagsFunction,
   listPostsBasedOnHashtag,
   deletePost,
+  rePost,
   likeAPost,
   dislikeAPost,
   editPost,

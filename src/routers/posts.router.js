@@ -10,6 +10,7 @@ import {
   dislikeAPost,
   commentAPost,
   listCommentPost,
+  rePost,
   postIsLikedFunction,
 } from "../controllers/posts.controller.js";
 
@@ -20,11 +21,13 @@ import {
   isAvaiableToDelete,
   isAvaiableToEdit,
   idIsValid,
+  isAvaiableToRepost,
   queryIsValid,
   isPostValid,
   postIsavableToDeslike,
   postIsLiked,
 } from "../middlewares/post.middleware.js";
+
 import validatePostSchema from "../middlewares/postMiddleware.js";
 
 const router = express.Router();
@@ -33,6 +36,7 @@ router.get("/timeline", queryIsValid, checkAuthorization, listTimeline);
 router.get("/hashtag", listHashtagsFunction);
 router.get("/hashtag/:hashtag", listPostsBasedOnHashtag);
 router.delete("/post/:id", checkAuthorization, isAvaiableToDelete, deletePost);
+router.post("/post/:id", checkAuthorization, isAvaiableToRepost, rePost);
 router.post(
   "/post/like/:postId",
   idIsValid,

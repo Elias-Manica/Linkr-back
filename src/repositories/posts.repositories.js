@@ -3,27 +3,41 @@ import { connection } from "../database/database.js";
 async function listPosts(limit, offset, userid) {
   const response = await connection.query(
     `
-    SELECT 
-      P1.id, P1.link, P1.text, P1.date,  
-      U1.id AS "userid", U1.username, U1.pictureurl, 
-      COUNT( DISTINCT U2.username) AS "qtdlikes", 
-      json_agg(DISTINCT U2.username) AS "nameusersliked",
-      json_agg(DISTINCT U2.id) AS "usersIdLiked", 
-      json_agg( DISTINCT h2.name) AS "hashtags",
-      COUNT( DISTINCT C1.description) AS "qtdcomments"
-      FROM posts P1 
-      JOIN users U1 ON P1.userid = U1.id 
-      LEFT JOIN likes L1 ON P1.id = L1.postid 
-      LEFT JOIN users U2 ON U2.id = L1.userid 
-      LEFT JOIN posthashtags H1 ON H1.postid = P1.id 
-      LEFT JOIN hashtags H2 ON h2.id = h1.hashtagid 
-      LEFT JOIN comments C1 ON C1.postid = P1.id
-      JOIN followers ON followers.follow = P1.userid
-      WHERE followers.userid = $3
-      GROUP BY P1.id, U1.username, U1.pictureurl, U1.id 
-      ORDER BY P1.id DESC 
-    LIMIT $1
-	  OFFSET $2;`,
+	SELECT
+		P1.id,
+		P1.link,
+		P1.text,
+		P1.date,
+		U1.id AS "userid",
+		U1.username,
+		U1.pictureurl,
+		COUNT(DISTINCT U2.username) AS "qtdlikes",
+		json_agg(DISTINCT U2.username) AS "nameusersliked",
+		json_agg(DISTINCT U2.id) AS "usersIdLiked",
+		json_agg(DISTINCT H2.name) AS "hashtags",
+		COUNT(DISTINCT C1.id) AS "qtdcomments", 
+      	COUNT(DISTINCT R1.id) AS "qtdreposts"
+	FROM
+		posts P1
+		JOIN users U1 ON P1.userid = U1.id
+		LEFT JOIN likes L1 ON P1.id = L1.postid
+		LEFT JOIN users U2 ON U2.id = L1.userid
+		LEFT JOIN posthashtags H1 ON H1.postid = P1.id
+		LEFT JOIN hashtags H2 ON H2.id = H1.hashtagid
+		LEFT JOIN comments C1 ON C1.postid = P1.id
+		LEFT JOIN reposts R1 ON R1.postid = P1.id
+		JOIN followers ON followers.follow = P1.userid
+	WHERE
+		followers.userid = $3
+	GROUP BY
+		P1.id,
+		U1.username,
+		U1.pictureurl,
+		U1.id
+	ORDER BY
+		P1.id DESC
+	LIMIT $1 OFFSET $2;
+	`,
     [limit, offset, userid]
   );
   return response;
@@ -93,6 +107,22 @@ async function deleteHashtagBasedOnPostid(postId) {
   return response;
 }
 
+async function deleteCommentsBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM comments WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
+async function deleteRepostsBasedOnPostid(postId) {
+  const response = await connection.query(
+    `DELETE FROM reposts WHERE postid=$1;`,
+    [postId]
+  );
+  return response;
+}
+
 async function listHashtag(hashtag) {
   const response = await connection.query(
     `SELECT * FROM hashtags WHERE name=$1;`,
@@ -151,6 +181,20 @@ async function editPost(postid, text) {
     [postid, text]
   );
   return response;
+}
+
+async function insertRepost(postid, userid) {
+  return connection.query(
+    `INSERT INTO reposts (postid, userid) VALUES ($1, $2);`,
+    [postid, userid]
+  );
+}
+
+async function getRepostByIds(postid, userid) {
+  return connection.query(
+    `SELECT * FROM reposts WHERE postid = $1 AND userid = $2;`,
+    [postid, userid]
+  );
 }
 
 async function listHashtagBasedOnName(name) {
@@ -249,6 +293,8 @@ export {
   deletePostsBasedOnId,
   deletelikesBasedOnPostid,
   deleteHashtagBasedOnPostid,
+  deleteCommentsBasedOnPostid,
+  deleteRepostsBasedOnPostid,
   listHashtag,
   insertHashtag,
   listPostCreated,
@@ -259,6 +305,8 @@ export {
   listHashtagBasedOnName,
   listNameHashtag,
   insertComment,
+  insertRepost,
+  getRepostByIds,
   listComment,
   listPostsPagination,
   hasPost,

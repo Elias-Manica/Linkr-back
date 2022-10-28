@@ -6,6 +6,7 @@ import {
 import {
   hasLikedPost,
   hasPost,
+  getRepostByIds,
   listPostBasedOnId,
 } from "../repositories/posts.repositories.js";
 
@@ -54,6 +55,34 @@ async function isAvaiableToEdit(req, res, next) {
     }
 
     res.locals.post = response.rows[0];
+
+    next();
+  } catch (error) {
+    return serverErrorResponse(res, error);
+  }
+}
+
+async function isAvaiableToRepost(req, res, next) {
+  const user = res.locals.user;
+  const { id } = req.params;
+  try {
+    const checkPostId = await listPostBasedOnId(id);
+
+    if (checkPostId.rows.length === 0) {
+      res.status(404).send({ message: "O post não foi encontrado" });
+      return;
+    }
+
+    const checkRepost = (await getRepostByIds(id, user.userid)).rows[0];
+
+    if (checkRepost) {
+      res
+        .status(401)
+        .send({ message: "Você não tem permissão para repostar esse post!" });
+      return;
+    }
+
+    res.locals.postid = checkPostId.rows[0].id;
 
     next();
   } catch (error) {
@@ -160,6 +189,7 @@ export {
   isAvaiableToDelete,
   isAvaiableToEdit,
   hasDescription,
+  isAvaiableToRepost,
   idIsValid,
   queryIsValid,
   isPostValid,
