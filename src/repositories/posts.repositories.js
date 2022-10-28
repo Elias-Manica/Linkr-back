@@ -26,7 +26,7 @@ async function listPosts(limit, offset, userid) {
 		LEFT JOIN hashtags H2 ON H2.id = H1.hashtagid
 		LEFT JOIN comments C1 ON C1.postid = P1.id
 		LEFT JOIN reposts R1 ON R1.postid = P1.id
-		JOIN followers ON followers.follow = P1.userid
+		LEFT JOIN followers ON followers.follow = P1.userid
 	WHERE
 		followers.userid = $3 OR P1.userid = $4
 	GROUP BY
